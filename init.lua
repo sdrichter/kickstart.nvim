@@ -195,11 +195,11 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Open terminal 10 units high at bottom
-vim.keymap.set('n', '<leader>t', function()
+vim.keymap.set('n', '<leader>ot', function()
   vim.cmd '10split'
   vim.cmd 'terminal'
   vim.cmd 'startinsert'
-end, { noremap = true, silent = true })
+end, { desc = '[O]pen [T]erminal', noremap = true, silent = true })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -754,6 +754,7 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'node-debug2-adapter',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -1013,7 +1014,7 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
