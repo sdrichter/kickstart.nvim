@@ -189,6 +189,7 @@ return {
             name = 'Launch file',
             program = '${file}',
             cwd = '${workspaceFolder}',
+            outFiles = { '${workspaceFolder}/**/*.js' },
           },
           {
             type = 'pwa-node',

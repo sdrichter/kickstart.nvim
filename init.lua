@@ -195,11 +195,14 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Open terminal 10 units high at bottom
-vim.keymap.set('n', '<leader>ot', function()
-  vim.cmd '10split'
-  vim.cmd 'terminal'
-  vim.cmd 'startinsert'
-end, { desc = '[O]pen [T]erminal', noremap = true, silent = true })
+-- vim.keymap.set('n', '<leader>ot', function()
+--   vim.cmd '20split'
+--   vim.cmd 'terminal'
+--   vim.cmd 'startinsert'
+-- end, { desc = '[O]pen [T]erminal', noremap = true, silent = true })
+
+vim.keymap.set('n', '<leader>ot', '<cmd>NvimTreeToggle<cr>', { desc = 'Toggle NvimTree (File Browser)' })
+vim.keymap.set('n', '<leader>ob', '<cmd>BlameToggle<cr>', { desc = 'Toggle Git Blame' })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -248,6 +251,7 @@ require('lazy').setup({
 
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'nathangrigg/vim-beancount',
+  { 'FabijanZulj/blame.nvim', opts = {} },
 
   {
     'nvimtools/none-ls.nvim',
@@ -269,7 +273,14 @@ require('lazy').setup({
       'nvim-tree/nvim-web-devicons',
     },
     config = function()
-      require('nvim-tree').setup {}
+      require('nvim-tree').setup {
+        update_focused_file = {
+          enable = true,
+          update_root = true,
+        },
+        sync_root_with_cwd = true,
+        respect_buf_cwd = true,
+      }
     end,
   },
 
@@ -283,6 +294,69 @@ require('lazy').setup({
         pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
       }
     end,
+  },
+
+  {
+    'akinsho/toggleterm.nvim',
+    opts = {
+      open_mapping = [[<c-\>]],
+      insert_mappings = true,
+      terminal_mappings = true,
+      auto_scroll = false,
+      direction = 'float',
+    },
+  },
+
+  {
+    'yetone/avante.nvim',
+    event = 'VeryLazy',
+    version = false, -- Never set this value to "*"! Never!
+    opts = {
+      -- add any opts here
+      -- for example
+      provider = 'copilot',
+    },
+    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+    build = 'make',
+    -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+      'stevearc/dressing.nvim',
+      'nvim-lua/plenary.nvim',
+      'MunifTanjim/nui.nvim',
+      --- The below dependencies are optional,
+      'echasnovski/mini.pick', -- for file_selector provider mini.pick
+      'nvim-telescope/telescope.nvim', -- for file_selector provider telescope
+      'hrsh7th/nvim-cmp', -- autocompletion for avante commands and mentions
+      'ibhagwan/fzf-lua', -- for file_selector provider fzf
+      'nvim-tree/nvim-web-devicons', -- or echasnovski/mini.icons
+      { 'zbirenbaum/copilot.lua', opts = {} }, -- for providers='copilot'
+      {
+        -- support for image pasting
+        'HakonHarnes/img-clip.nvim',
+        event = 'VeryLazy',
+        opts = {
+          -- recommended settings
+          default = {
+            embed_image_as_base64 = false,
+            prompt_for_file_name = false,
+            drag_and_drop = {
+              insert_mode = true,
+            },
+            -- required for Windows users
+            use_absolute_path = true,
+          },
+        },
+      },
+      {
+        -- Make sure to set this up properly if you have lazy=true
+        'MeanderingProgrammer/render-markdown.nvim',
+        opts = {
+          file_types = { 'markdown', 'Avante' },
+        },
+        ft = { 'markdown', 'Avante' },
+      },
+    },
   },
 
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
@@ -385,6 +459,7 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>o', group = '[O]pen' },
       },
     },
   },
@@ -736,6 +811,13 @@ require('lazy').setup({
             },
           },
         },
+        beancount = {
+          settings = {
+            init_options = {
+              journal_file = '~/repos/plaintextaccounting/beancount/ledger/main.beancount',
+            },
+          },
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -1026,6 +1108,12 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   -- { import = 'custom.plugins' },
+  -- {
+  --   import = 'custom.plugins.floating_terminals',
+  --   opts = {
+  --     keymap_prefix = '<leader>ot',
+  --   },
+  -- },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
