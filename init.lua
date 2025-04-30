@@ -314,7 +314,10 @@ require('lazy').setup({
     opts = {
       -- add any opts here
       -- for example
-      provider = 'copilot',
+      provider = 'ollama',
+      ollama = {
+        model = 'qwen2.5-coder:14b',
+      },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
     build = 'make',
@@ -330,7 +333,7 @@ require('lazy').setup({
       'hrsh7th/nvim-cmp', -- autocompletion for avante commands and mentions
       'ibhagwan/fzf-lua', -- for file_selector provider fzf
       'nvim-tree/nvim-web-devicons', -- or echasnovski/mini.icons
-      { 'zbirenbaum/copilot.lua', opts = {} }, -- for providers='copilot'
+      -- { 'zbirenbaum/copilot.lua', opts = {} }, -- for providers='copilot'
       {
         -- support for image pasting
         'HakonHarnes/img-clip.nvim',
