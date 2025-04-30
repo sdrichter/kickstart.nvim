@@ -201,7 +201,6 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 --   vim.cmd 'startinsert'
 -- end, { desc = '[O]pen [T]erminal', noremap = true, silent = true })
 
-vim.keymap.set('n', '<leader>ot', '<cmd>NvimTreeToggle<cr>', { desc = 'Toggle NvimTree (File Browser)' })
 vim.keymap.set('n', '<leader>ob', '<cmd>BlameToggle<cr>', { desc = 'Toggle Git Blame' })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
@@ -250,7 +249,34 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
 
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
+
+  {
+    'nvimdev/dashboard-nvim',
+    event = 'VimEnter',
+    config = function()
+      require('dashboard').setup {
+        change_to_vcs_root = true,
+      }
+    end,
+    dependencies = { { 'nvim-tree/nvim-web-devicons' } },
+  },
+
+  {
+    'rmagatti/auto-session',
+    lazy = false,
+    keys = {
+      -- Will use Telescope if installed or a vim.ui.select picker otherwise
+      { '<leader>wr', '<cmd>SessionSearch<CR>', desc = 'Session search' },
+      { '<leader>ws', '<cmd>SessionSave<CR>', desc = 'Save session' },
+      { '<leader>wa', '<cmd>SessionToggleAutoSave<CR>', desc = 'Toggle autosave' },
+    },
+    opts = {
+      suppressed_dirs = { '~/Projects', '~/Downloads', '~/Documents', '~/Desktop', '/' },
+    },
+  },
+
   'nathangrigg/vim-beancount',
+
   { 'FabijanZulj/blame.nvim', opts = {} },
 
   {
@@ -262,25 +288,6 @@ require('lazy').setup({
         nls.diagnostics.bean_check,
       }
       return opts
-    end,
-  },
-
-  {
-    'nvim-tree/nvim-tree.lua',
-    version = '*',
-    lazy = false,
-    dependencies = {
-      'nvim-tree/nvim-web-devicons',
-    },
-    config = function()
-      require('nvim-tree').setup {
-        update_focused_file = {
-          enable = true,
-          update_root = true,
-        },
-        sync_root_with_cwd = true,
-        respect_buf_cwd = true,
-      }
     end,
   },
 
@@ -1100,11 +1107,11 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
