@@ -194,12 +194,10 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
--- Open terminal 10 units high at bottom
--- vim.keymap.set('n', '<leader>ot', function()
---   vim.cmd '20split'
---   vim.cmd 'terminal'
---   vim.cmd 'startinsert'
--- end, { desc = '[O]pen [T]erminal', noremap = true, silent = true })
+vim.keymap.set('n', '<C-Left>', "<cmd>lua require('resize').ResizeLeft()<CR>", { silent = true })
+vim.keymap.set('n', '<C-Right>', "<cmd>lua require('resize').ResizeRight()<CR>", { silent = true })
+vim.keymap.set('n', '<C-Up>', "<cmd>lua require('resize').ResizeUp()<CR>", { silent = true })
+vim.keymap.set('n', '<C-Down>', "<cmd>lua require('resize').ResizeDown()<CR>", { silent = true })
 
 vim.keymap.set('n', '<leader>ob', '<cmd>BlameToggle<cr>', { desc = 'Toggle Git Blame' })
 
@@ -275,6 +273,8 @@ require('lazy').setup({
     },
   },
 
+  '0xm4n/resize.nvim',
+
   'nathangrigg/vim-beancount',
 
   { 'FabijanZulj/blame.nvim', opts = {} },
@@ -321,9 +321,20 @@ require('lazy').setup({
     opts = {
       -- add any opts here
       -- for example
-      provider = 'ollama',
-      ollama = {
-        model = 'qwen2.5-coder:14b',
+      provider = 'groq',
+      curor_applying_provider = 'groq',
+      behaviour = {
+        enable_cursor_planning_mode = true,
+      },
+      vendors = {
+        groq = {
+          __inherited_from = 'openai',
+          api_key_name = 'GROQ_API_KEY',
+          endpoint = 'https://api.groq.com/openai/v1/',
+          model = 'llama-3.3-70b-versatile',
+          max_completion_tokens = 32768,
+          disable_tools = true,
+        },
       },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
@@ -1113,18 +1124,6 @@ require('lazy').setup({
   require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
-  -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
-  --    This is the easiest way to modularize your config.
-  --
-  --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
-  -- {
-  --   import = 'custom.plugins.floating_terminals',
-  --   opts = {
-  --     keymap_prefix = '<leader>ot',
-  --   },
-  -- },
-  --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
